@@ -196,5 +196,13 @@
         <file alias="Yield.svg">src/ui/toolbar/Images/Yield.svg</file>
         <file alias="ZoomMinus.svg">src/FlightMap/Images/ZoomMinus.svg</file>
         <file alias="ZoomPlus.svg">src/FlightMap/Images/ZoomPlus.svg</file>
+        <file alias="Grid.svg">custom/res/Images/Grid.svg</file>
+        <file alias="gridLine.svg">custom/res/Images/gridLine.svg</file>
+        <file alias="NoneBox.svg">custom/res/Images/NoneBox.svg</file>
+        <file alias="CenterPointWithSquare.svg">custom/res/Images/CenterPointWithSquare.svg</file>
+        <file alias="CircleWithCenterPoint.svg">custom/res/Images/CircleWithCenterPoint.svg</file>
+        <file alias="CircleWithoutCenterPoint.svg">custom/res/Images/CircleWithoutCenterPoint.svg</file>
+        <file alias="Cross.svg">custom/res/Images/Cross.svg</file>
+        <file alias="Square.svg">custom/res/Images/Square.svg</file>
     </qresource>
 </RCC>

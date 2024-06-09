@@ -109,7 +109,8 @@ protected:
     virtual void _onNewSourcePad(GstPad* pad);
     virtual void _onNewDecoderPad(GstPad* pad);
     virtual bool _addDecoder(GstElement* src);
-    virtual bool _addVideoSink(GstPad* pad);
+    // virtual bool _addVideoSink(GstPad* pad);
+    virtual bool _linkVideoSink(GstPad* pad); //TODO THANh ADD
     virtual void _noteTeeFrame(void);
     virtual void _noteVideoSinkFrame(void);
     virtual void _noteEndOfStream(void);
@@ -126,10 +127,14 @@ protected:
     static void _linkPad(GstElement* element, GstPad* pad, gpointer data);
     static gboolean _padProbe(GstElement* element, GstPad* pad, gpointer user_data);
     static gboolean _filterParserCaps(GstElement* bin, GstPad* pad, GstElement* element, GstQuery* query, gpointer data);
+    static gboolean _autoplugQueryCaps(GstElement* bin, GstPad* pad, GstElement* element, GstQuery* query, gpointer data); //TODO THANH ADD
+    static gboolean _autoplugQueryContext(GstElement* bin, GstPad* pad, GstElement* element, GstQuery* query, gpointer data); //TODO THANH ADD
+    static gboolean _autoplugQuery(GstElement* bin, GstPad* pad, GstElement* element, GstQuery* query, gpointer data); //TODO THANH ADD
     static GstPadProbeReturn _teeProbe(GstPad* pad, GstPadProbeInfo* info, gpointer user_data);
     static GstPadProbeReturn _videoSinkProbe(GstPad* pad, GstPadProbeInfo* info, gpointer user_data);
     static GstPadProbeReturn _eosProbe(GstPad* pad, GstPadProbeInfo* info, gpointer user_data);
     static GstPadProbeReturn _keyframeWatch(GstPad* pad, GstPadProbeInfo* info, gpointer user_data);
+    static GstPadProbeReturn _linkValve(GstPad* pad, GstPadProbeInfo* info, gpointer user_data); //TODO THANH ADD
 
     bool                _streaming;
     bool                _decoding;

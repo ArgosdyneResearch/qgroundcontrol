@@ -4,14 +4,11 @@ name: Android 64-bit Release
 on:
   push:
     branches:
-      - 'master'
-      - 'Stable*'
+      - 'main_ales'
+      - 'Beta*'
     tags:
       - 'v*'
-  pull_request:
-    branches:
-    - '*'
-
+    
 defaults:
   run:
     shell: bash
@@ -20,7 +17,7 @@ env:
   SOURCE_DIR:   ${{ github.workspace }}
   QT_VERSION:   5.15.2
   ARTIFACT:     QGroundControl64.apk
-  BUILD_TYPE:   ${{ fromJSON('["DailyBuild", "StableBuild"]')[ github.ref_type == 'tag' || contains(github.ref, 'Stable_' ) ] }}
+  BUILD_TYPE:   StableBuild
 
 jobs:
   build:
@@ -28,14 +25,10 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           submodules: recursive
-
-      - name: Get all tags for correct version determination
-        working-directory:  ${{ github.workspace }}
-        run: |
-          git fetch --all --tags -f
+          fetch-tags: true
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v3
@@ -58,7 +51,10 @@ jobs:
         run: |
             ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --uninstall "platforms;android-33-ext5"
             ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --uninstall "platforms;android-33-ext4"
-
+            ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --uninstall "platforms;android-34"
+            ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --uninstall "platforms;android-34-ext8"
+            ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --uninstall "platforms;android-34-ext10"
+            ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --uninstall "platforms;android-34-ext11"
       - name: Install ccache
         run:  sudo apt-get install ccache
 
@@ -68,7 +64,6 @@ jobs:
         run: |
           string(TIMESTAMP current_date "%Y-%m-%d-%H;%M;%S" UTC)
           message("::set-output name=timestamp::${current_date}")
-
       - name: ccache cache files
         uses: actions/cache@v2
         with:
@@ -84,17 +79,15 @@ jobs:
             echo "compression_level = 5" >> ~/.ccache/ccache.conf
             ccache -s
             ccache -z
-
       - name: Create build directory
         run:  mkdir ${{ runner.temp }}/shadow_build_dir
 
       - name:               Install gstreamer
         working-directory:  ${{ github.workspace }}
         run: |
-            wget --quiet https://gstreamer.freedesktop.org/data/pkg/android/1.18.5/gstreamer-1.0-android-universal-1.18.5.tar.xz
+            wget --quiet https://gstreamer.freedesktop.org/data/pkg/android/1.18.6/gstreamer-1.0-android-universal-1.18.6.tar.xz
             mkdir gstreamer-1.0-android-universal-1.18.5
-            tar xf gstreamer-1.0-android-universal-1.18.5.tar.xz -C gstreamer-1.0-android-universal-1.18.5
-
+            tar xf gstreamer-1.0-android-universal-1.18.6.tar.xz -C gstreamer-1.0-android-universal-1.18.5
       # This will set GIT_BRANCH_NAME environment variable
       - name: Git branch name
         id:   git-branch-name
@@ -105,7 +98,6 @@ jobs:
           if [ $GIT_BRANCH_NAME != "Stable*" ]; then
             ${SOURCE_DIR}/tools/update_android_manifest_package.sh ${GIT_BRANCH_NAME}
           fi
-
       - name: Build
         working-directory: ${{ runner.temp }}/shadow_build_dir
         env:
@@ -117,7 +109,6 @@ jobs:
         run:  |
             qmake -r ${SOURCE_DIR}/qgroundcontrol.pro -spec android-clang CONFIG+=${BUILD_TYPE} CONFIG+=installer ANDROID_ABIS="arm64-v8a"
             make -j2
-
       - name: ccache post-run
         run:  ccache -s
 
@@ -126,19 +117,3 @@ jobs:
         with:
           name: ${{ env.ARTIFACT }}
           path: ${{ runner.temp }}/shadow_build_dir/package/${{ env.ARTIFACT }}
-
-      - name: Upload build to S3 Bucket
-        if:                 github.event_name == 'push'
-        working-directory:  ${{ runner.temp }}/shadow_build_dir/package
-        run: |
-              aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-              aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-              aws s3 cp ${ARTIFACT} s3://qgroundcontrol/builds/${GIT_BRANCH_NAME}/${ARTIFACT} --region us-west-2 --acl public-read
-
-      - name: Upload tagged stable build to S3 latest Bucket
-        if:                 github.event_name == 'push' && github.ref_type == 'tag'
-        working-directory:  ${{ runner.temp }}/shadow_build_dir/package
-        run: |
-              aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-              aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-              aws s3 cp ${ARTIFACT} s3://qgroundcontrol/latest/${ARTIFACT} --region us-west-2 --acl public-read

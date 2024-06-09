@@ -52,6 +52,38 @@
 		<file alias="XDeleteBlack.svg">../resources/XDeleteBlack.svg</file>
 		<file alias="waypoint.svg">../resources/waypoint.svg</file>
 		<file>../resources/icons/qgroundcontrol.ico</file>
+		<file alias ="TopMenuBatteryPower.svg">../resources/TopMenuBatteryPower.svg</file>
+		<file alias ="TopMenuBattery2.svg">../resources/TopMenuBattery2.svg</file>
+		<file alias ="TopMenuGpsStatus.svg">../resources/TopMenuGpsStatus.svg</file>
+		<file alias ="TopMenuImageTransferStatus.svg">../resources/TopMenuImageTransferStatus.svg</file>
+		<file alias ="TopMenuRemoteControllerConnectionStatus.svg">../resources/TopMenuRemoteControllerConnectionStatus.svg</file>
+		<file alias ="TopMenuSignalLevel.svg">../resources/TopMenuSignalLevel.svg</file>
+		<file alias ="CloseLightgray.svg">../resources/CloseLightgray.svg</file>
+		<file alias ="CloseWhite.svg">../resources/CloseWhite.svg</file>
+		<file alias ="Warning.svg">../resources/Warning.svg</file>
+		<file alias="GalleryButton.svg"         >../resources/GalleryButton.svg</file>
+		<file alias="LiveButton.svg"            >../resources/LiveButton.svg</file>
+		<file alias="ShootRecordSwitch.svg"   >../resources/ShootRecordSwitch.svg</file>
+		<file alias="Record.svg"                >../resources/Record.svg</file>
+		<file alias="NoSdCardRed.svg"         >../resources/NoSdCardRed.svg</file>
+		<file alias ="TopMenuAltitude.svg">../resources/TopMenuAltitude.svg</file>
+		<file alias ="TopMenuBattery.svg">../resources/TopMenuBattery.svg</file>
+		<file alias ="TopMenuDistance.svg">../resources/TopMenuDistance.svg</file>
+		<file alias ="TopMenuHomeButton.svg">../resources/TopMenuHomeButton.png</file>
+		<file alias ="TopMenuMapTool.svg">../resources/TopMenuMapTool.svg</file>
+		<file alias ="TopMenuObstacleSensorOff.svg">../resources/TopMenuObstacleSensorOff.svg</file>
+		<file alias ="TopMenuObstacleSensorOn.svg">../resources/TopMenuObstacleSensorOn.svg</file>
+		<file alias ="TopMenuSetting.png">../resources/TopMenuSetting.png</file>
+		<file alias ="TopMenuSpeed.svg">../resources/TopMenuSpeed.svg</file>
+		<file alias ="TopMenuManualFlight.svg">../resources/TopMenuManualFlight.svg</file>
+
+		<file alias ="BackArrowButton.svg">../resources/BackArrowButton.svg</file>
+		<file alias ="CameraBottomMenuAngleButton.svg">../resources/CameraBottomMenuAngleButton.svg</file>
+		<file alias ="CameraBottomMenuAngleDotButton.svg">../resources/CameraBottomMenuAngleDotButton.svg</file>
+		<file alias ="CameraBottomMenuSettingButton.svg">../resources/CameraBottomMenuSettingButton.svg</file>
+		<file alias ="CameraBottomMenuStyleButton.svg">../resources/CameraBottomMenuStyleButton.svg</file>
+		<file alias ="CameraBottomMenuWbButton.svg">../resources/CameraBottomMenuWbButton.svg</file>
+		<file alias ="FrontArrowButton.svg">../resources/FrontArrowButton.svg</file>
 	</qresource>
 	<qresource prefix="/res/firmware">
 		<file alias="3drradio.png">../resources/firmware/3drradio.png</file>

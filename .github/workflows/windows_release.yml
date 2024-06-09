@@ -3,14 +3,11 @@ name: Windows Release
 on:
   push:
     branches:
-      - 'master'
-      - 'Stable*'
+      - 'main_ales'
+      - 'Beta*'
     tags:
       - 'v*'
-  pull_request:
-    branches:
-    - '*'
-
+    
 defaults:
   run:
     shell: cmd
@@ -18,8 +15,8 @@ defaults:
 env:
   SOURCE_DIR:   ${{ github.workspace }}
   QT_VERSION:   5.15.2
-  ARTIFACT:     QGroundControl-installer.exe
-  BUILD_TYPE:   ${{ fromJSON('["DailyBuild", "StableBuild"]')[ github.ref_type == 'tag' || contains(github.ref, 'Stable_' ) ] }}
+  ARTIFACT:     AlesQGroundControl-installer.exe
+  BUILD_TYPE:   StableBuild
 
 jobs:
   build:
@@ -34,7 +31,7 @@ jobs:
       - name: Get all tags for correct version determination
         working-directory:  ${{ github.workspace }}
         run: |
-          git fetch --all --tags -f
+          git fetch --all --tags -f --depth 1
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v2
@@ -97,31 +94,3 @@ jobs:
         with:
           name: ${{ env.ARTIFACT }}
           path: ${{ runner.temp }}\shadow_build_dir\staging\${{ env.ARTIFACT }}
-
-      - name: Save PDB artifact
-        uses: actions/upload-artifact@master
-        with:
-          name: qgroundcontrol.pdb
-          path: ${{ runner.temp }}\shadow_build_dir\staging\qgroundcontrol.pdb
-
-      # This will set GIT_BRANCH_NAME environment variable
-      - name: Git branch name
-        id:   git-branch-name
-        uses: EthanSK/git-branch-name-action@v1
-
-      - name: Upload build to S3 Bucket
-        if:                 github.event_name == 'push'
-        working-directory:  ${{ runner.temp }}\shadow_build_dir\staging
-        run: |
-              aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-              aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-              aws s3 cp ${{ env.ARTIFACT }} s3://qgroundcontrol/builds/${{ env.GIT_BRANCH_NAME }}/${{ env.ARTIFACT }} --region us-west-2 --acl public-read
-
-      - name: Upload tagged stable build to S3 latest Bucket
-        if:                 github.event_name == 'push' && github.ref_type == 'tag'
-        working-directory:  ${{ runner.temp }}\shadow_build_dir\staging
-        run: |
-              aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-              aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-              aws s3 cp ${{ env.ARTIFACT }} s3://qgroundcontrol/latest/${{ env.ARTIFACT }} --region us-west-2 --acl public-read
-
